@@ -31,7 +31,7 @@ We use geometry motivated prior information to regularize the unobservable regio
 - [x] Evaluation scripts
 - [x] Mesh extraction script
 - [x] Editted rendering script
-- [ ] Dataset clean
+- [x] Dataset clean
 
 ## Setup
 
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 ```
 
 ### Dataset
-We provide processed scannet and synthetic scenes in this [link](). Please download the data and unzip in the `data` folder, the resulting folder structure should be:
+We provide processed scannet and synthetic scenes in this [link](https://drive.google.com/drive/folders/1yY9TYj-HaM2_I9qzsNQN8leOw6WFzVDA?usp=sharing). Please download the data and unzip in the `data` folder, the resulting folder structure should be:
 ```
 └── RICO
   └── data
