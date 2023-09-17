@@ -407,22 +407,6 @@ class RICOLoss(nn.Module):
         loss = loss.mean()
 
         return loss
-    
-    def get_item3_loss(self, semantics):
-        # loss = -1 * obj_sdfs
-        # loss = torch.exp(-1 * obj_sdfs)
-        # loss = loss.mean()
-
-        # margin_target = torch.ones(sdfs.shape).cuda()
-        # threshold = 0.05 * torch.ones(sdfs.shape).cuda()
-        # loss = torch.nn.functional.margin_ranking_loss(sdfs, threshold, margin_target)
-
-        semantics = semantics.reshape(-1, semantics.shape[-1])
-        semantic_probs = torch.softmax(semantics, dim=-1)
-        entropy = -1 * torch.sum(semantic_probs * torch.log(semantic_probs), dim=-1)
-        loss = entropy.mean()
-
-        return loss
         
     def forward(self, model_outputs, ground_truth, iter_ratio=-1):
         rgb_gt = ground_truth['rgb'].cuda()
@@ -445,13 +429,11 @@ class RICOLoss(nn.Module):
         # combine with GT
         mask = (ground_truth['mask'] > 0.5).cuda() & mask
 
-        mono_prob = torch.ones(rgb_gt.shape[1], 1).cuda()
-
-        depth_loss = self.get_depth_loss(depth_pred, depth_gt, mask, mono_prob)
+        depth_loss = self.get_depth_loss(depth_pred, depth_gt, mask)
         if isinstance(depth_loss, float):
             depth_loss = torch.tensor(0.0).cuda().float()    
         
-        normal_l1, normal_cos = self.get_normal_loss(normal_pred * mask, normal_gt, mono_prob)
+        normal_l1, normal_cos = self.get_normal_loss(normal_pred * mask, normal_gt)
         
         if 'grad_theta_nei' in model_outputs:
             smooth_loss = self.get_smooth_loss(model_outputs)
